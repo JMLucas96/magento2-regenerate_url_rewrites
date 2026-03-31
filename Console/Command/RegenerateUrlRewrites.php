@@ -323,7 +323,7 @@ class RegenerateUrlRewrites extends RegenerateUrlRewritesAbstract
             $this->_commandOptions['storesList'] = $allStores;
         }
         // we will re-generate URL only in this specific store (if it exists)
-        elseif (strlen($storeId) && ctype_digit($storeId)) {
+        elseif (strlen($storeId) && is_numeric($storeId)) {
             if (isset($allStores[$storeId])) {
                 $this->_commandOptions['storesList'] = array(
                     (int)$storeId => $allStores[$storeId]
