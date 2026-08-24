@@ -233,6 +233,15 @@ class RegenerateCategoryRewrites extends AbstractRegenerateRewrites
             $category->getResource()->saveAttribute($category, 'url_key');
         }
 
+        // Magento\CatalogUrlRewrite\Model\CategoryUrlPathGenerator::shouldReturnCurrentUrlPath()
+        // returns the already-loaded url_path as-is whenever dataHasChangedFor('url_key') and
+        // dataHasChangedFor('parent_id') are both false - which is the normal case for a category
+        // that was just loaded from a collection, not edited in the admin. When a category's
+        // url_path was only ever saved at the default (store 0) scope, that inherited value is
+        // returned forever instead of a per-store one being generated from this store's url_key.
+        // Forcing url_path to null makes the generator always recompute it for the current store.
+        $category->setUrlPath(null);
+
         try {
             $urlPath = $this->_getCategoryUrlPathGenerator()->getUrlPath($category);
         } catch (LocalizedException $e) {
